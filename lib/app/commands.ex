@@ -9,11 +9,16 @@ defmodule App.Commands do
   command "talk", Bot, :talk
   command "speakers", Bot, :speakers
   command "speaker", Bot, :speaker
+  command "bookmarks", Bot, :bookmarks
+  command "attend", Bot, :attend
+  command "unattend", Bot, :unattend
 
   callback_query_command "schedule", Bot, :schedule_callback
   
   inline_query_command "talk", Bot, :talk_query
   inline_query_command "speaker", Bot, :speaker_query
+  inline_query_command "attend", Bot, :attend_query
+  inline_query_command "unattend", Bot, :unattend_query
 
   # Fallbacks
 

@@ -177,4 +177,30 @@ defmodule App.Commands.Bot do
       ))
       |> send_message(parse_mode: "Markdown")
   end
+
+  # todo: display your bookmarks
+  # hint: fetch bookmarks from Bookmarks
+  # hint: cut'n'paste from speakers/schedule?
+  def bookmark(update) do
+  end
+
+  # todo: display inline talks to choose
+  # hint: cut'n'paste from speaker_query/talk_query?
+  def attend_query(update) do
+  end
+
+  # todo: add the choosen talk to your bookmarks
+  # hint: use Bookmarks to add a new talk
+  def attend(update) do
+  end
+
+  # todo: display inline bookmarks to choose
+  # hint: cut'n'paste from attend?
+  def unattend_query(update) do
+  end
+
+  # todo: remove the choosen talk from your bookmarks
+  # hint: use Bookmarks to remove an existing talk
+  def unattend(update) do
+  end
 end
