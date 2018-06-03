@@ -137,7 +137,7 @@ defmodule App.Commands.Bot do
   # hint: what about cut'n'paste from talk_query?
   # hint: display #{name}
   def speaker_query(update) do
-    Logger.info("Inline Command Query /speakers")
+    Logger.info("Inline Command Query /speaker")
   end
 
   # todo: display details of a choosen speaker
