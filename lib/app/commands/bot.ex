@@ -126,23 +126,55 @@ defmodule App.Commands.Bot do
       |> send_message(parse_mode: "Markdown")
   end
 
-  # todo: display speakers list
-  # hint: fetch speakers from State
-  # hint: display #{name} list using parse_mode: Markdown
+  # display speakers list
   def speakers(update) do
+    Logger.info("Command /speakers")
+
+    message = State.get("speakers")
+      |> Enum.map_join("\n", &(Map.get(&1, "name")))
+    
+    send_message("*Speakers list*\n\n#{message}", parse_mode: "Markdown")
   end
 
-  # todo: display inline speakers to choose
-  # hint: what about cut'n'paste from talk_query?
-  # hint: display #{name}
+  # display inline speakers to choose
   def speaker_query(update) do
+    Logger.info("Inline Command Query /speaker")
 
+    query = update.inline_query.query |> String.replace("/speaker ", "") |> String.downcase()
+    speakers = State.get("speakers")
+
+    speakers
+      |> Enum.filter(&(String.contains?(Map.get(&1, "lower_name"), query)))
+      |> Enum.map(fn(talk) ->
+        name = Map.get(talk, "name")
+
+        %InlineQueryResult.Article{
+          id: name,
+          title: name,
+          input_message_content: %{
+            message_text: "/speaker #{name}"
+          }
+        }
+      end)
+      |> answer_inline_query()
   end
 
-  # todo: display details of a choosen speaker
-  # hint: what about cut'n'paste from talk?
+  # display details of a choosen speaker
   # hint: display *#{name}\n* #{bio}
   def speaker(update) do
-    
+    Logger.info("Command /speaker")
+
+    query = update.message.text |> String.replace("/speaker ", "")
+    speakers = State.get("speakers")
+
+    speakers
+      |> Enum.filter(&(Map.get(&1, "name") == query))
+      |> Enum.map_join("\n", &(
+        """
+        *#{Map.get(&1, "name")}*
+        #{Map.get(&1, "bio")}
+        """
+      ))
+      |> send_message(parse_mode: "Markdown")
   end
 end
