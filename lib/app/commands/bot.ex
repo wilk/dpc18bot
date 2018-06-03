@@ -125,4 +125,24 @@ defmodule App.Commands.Bot do
       ))
       |> send_message(parse_mode: "Markdown")
   end
+
+  # todo: display speakers list
+  # hint: fetch speakers from State
+  # hint: display #{name} list using parse_mode: Markdown
+  def speakers(update) do
+  end
+
+  # todo: display inline speakers to choose
+  # hint: what about cut'n'paste from talk_query?
+  # hint: display #{name}
+  def speaker_query(update) do
+
+  end
+
+  # todo: display details of a choosen speaker
+  # hint: what about cut'n'paste from talk?
+  # hint: display *#{name}\n* #{bio}
+  def speaker(update) do
+    
+  end
 end

@@ -7,10 +7,13 @@ defmodule App.Commands do
   command "help", Bot, :help
   command "schedule", Bot, :schedule
   command "talk", Bot, :talk
+  command "speakers", Bot, :speakers
+  command "speaker", Bot, :speaker
 
   callback_query_command "schedule", Bot, :schedule_callback
   
   inline_query_command "talk", Bot, :talk_query
+  inline_query_command "speaker", Bot, :speaker_query
 
   # Fallbacks
 

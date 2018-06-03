@@ -16,3 +16,8 @@ Dutch PHP Conference 2018 Telegram Bot
 - implement schedule callback
 - implement talk query
 - implement talk command
+
+### Step 3
+- implement speakers command
+- implement speakers query
+- implement speaker command
