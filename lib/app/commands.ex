@@ -5,6 +5,12 @@ defmodule App.Commands do
   alias App.Commands.Bot
 
   command "help", Bot, :help
+  command "schedule", Bot, :schedule
+  command "talk", Bot, :talk
+
+  callback_query_command "schedule", Bot, :schedule_callback
+  
+  inline_query_command "talk", Bot, :talk_query
 
   # Fallbacks
 
