@@ -11,6 +11,19 @@ defmodule App.State do
         name = Map.get(el, "speaker") |> String.replace("_", "-")
         %{"lower_name" => String.downcase(name), "name" => name, "bio" => Map.get(el, "bio") |> String.replace("_", "-")} 
       end)
+
+    schedule = res
+      |> Enum.uniq_by(fn(el) -> Map.get(el, "id") end)
+      |> Enum.map(fn(el) -> 
+        title = Map.get(el, "title")
+        %{
+          "title_lower" => title |> String.downcase(), 
+          "title" => title, 
+          "content" => Map.get(el, "content"),
+          "time" => Map.get(el, "time"),
+          "room" => Map.get(el, "room")
+        } 
+      end)
     
     talks = res 
       |> Enum.filter(fn(el) -> Map.get(el, "tutorial") == "talk" end)
