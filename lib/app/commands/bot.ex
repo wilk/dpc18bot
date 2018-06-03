@@ -130,19 +130,20 @@ defmodule App.Commands.Bot do
   # hint: fetch speakers from State
   # hint: display #{name} list using parse_mode: Markdown
   def speakers(update) do
+    Logger.info("Command /speakers")
   end
 
   # todo: display inline speakers to choose
   # hint: what about cut'n'paste from talk_query?
   # hint: display #{name}
   def speaker_query(update) do
-
+    Logger.info("Inline Command Query /speakers")
   end
 
   # todo: display details of a choosen speaker
   # hint: what about cut'n'paste from talk?
   # hint: display *#{name}\n* #{bio}
   def speaker(update) do
-    
+    Logger.info("Command /speaker")
   end
 end
