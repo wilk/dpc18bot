@@ -3,7 +3,7 @@ defmodule App.Commands.Bot do
 
   # display all available commands
   def help(update) do
-    Logger.info "Command /help"
+    Logger.info("Command /help")
 
     send_message """
     List of all available commands:
@@ -41,16 +41,19 @@ defmodule App.Commands.Bot do
 
     case update.callback_query.data do
       "/schedule tutorial" -> 
+        Logger.info("Callback Query Command /schedule tutorial")
         # hint: fetch tutorial from State tutorials
         # hint: tutorials are grouped by hours (Map.keys)
         # hint: #{title} (#{speaker}) | #{room} | #{level}
 
       "/schedule day1" -> 
+        Logger.info("Callback Query Command /schedule day1")
         # hint: fetch talks from State talks_day_1
         # hint: tutorials are grouped by hours (Map.keys)
         # hint: #{title} (#{speaker}) | #{room} | #{level}
 
       "/schedule day2" -> 
+        Logger.info("Callback Query Command /schedule day2")
         # hint: fetch talks from State talks_day_1
         # hint: tutorials are grouped by hours (Map.keys)
         # hint: #{title} (#{speaker}) | #{room} | #{level}
