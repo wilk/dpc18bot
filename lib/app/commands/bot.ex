@@ -1,6 +1,8 @@
 defmodule App.Commands.Bot do
   use App.Commander
 
+  alias App.State
+
   # display all available commands
   def help(update) do
     Logger.info("Command /help")
@@ -18,61 +20,109 @@ defmodule App.Commands.Bot do
     """
   end
 
-  # todo: display 3 action buttons (2 days and the tutorials day)
-  # hint: use reply_markup{inline_keyboard[[{text, callback_data}]]}
+  # display 3 action buttons (2 days and the tutorials day)
   def schedule(update) do
     Logger.info("Command /schedule")
 
     options = [
-      [],
-      []
+      [
+        %{
+          text: "Day 1",
+          callback_data: "/schedule day1"
+        },
+        %{
+          text: "Day 2",
+          callback_data: "/schedule day2"
+        }
+      ],
+      [
+        %{
+          text: "Tutorial day",
+          callback_data: "/schedule tutorial"
+        }
+      ]
     ]
 
     markup = %{
-    
+      inline_keyboard: options
     }
 
     send_message "Which day?", reply_markup: markup
   end
 
-  # todo: display the talks list for the selected day
+  # common schedule function, useful both for tuts and talks
+  defp build_schedule_answer(talks) do
+    talks
+      |> Map.keys()
+      |> Enum.map_join("\n\n", fn(time) ->
+        msg = Map.get(talks, time) |> Enum.map_join("\n", &("#{Map.get(&1, "title")} (#{Map.get(&1, "speaker")}) | #{Map.get(&1, "room")} | #{Map.get(&1, "level")}"))
+        "*#{time}*\n\n#{msg}"
+      end)
+  end
+
+  # display the talks list for the selected day
   def schedule_callback(update) do
     Logger.info("Callback Query Command /schedule")
 
     case update.callback_query.data do
       "/schedule tutorial" -> 
         Logger.info("Callback Query Command /schedule tutorial")
-        # hint: fetch tutorial from State tutorials
-        # hint: tutorials are grouped by hours (Map.keys)
-        # hint: #{title} (#{speaker}) | #{room} | #{level}
+
+        message = State.get("tutorials") |> build_schedule_answer()
+        send_message("*Schedule of Tutorials day*\n\n#{message}", parse_mode: "Markdown")
 
       "/schedule day1" -> 
         Logger.info("Callback Query Command /schedule day1")
-        # hint: fetch talks from State talks_day_1
-        # hint: tutorials are grouped by hours (Map.keys)
-        # hint: #{title} (#{speaker}) | #{room} | #{level}
+
+        message = State.get("talks_day_1") |> build_schedule_answer()
+        send_message("*Schedule of Conference day 1*\n#{message}", parse_mode: "Markdown")
 
       "/schedule day2" -> 
         Logger.info("Callback Query Command /schedule day2")
-        # hint: fetch talks from State talks_day_1
-        # hint: tutorials are grouped by hours (Map.keys)
-        # hint: #{title} (#{speaker}) | #{room} | #{level}
+
+        message = State.get("talks_day_2") |> build_schedule_answer()
+        send_message("*Schedule of Conference day 2*\n#{message}", parse_mode: "Markdown")
     end
   end
 
-  # todo: display inline talks to choose
-  # hint: fetch schedule from State
-  # hint: sanitize update.inline_query.query from /talk command
-  # hint: reply with answer_inline_query and %InlineQueryResult.Article struct (id, title, input_message_content%{message_text})
+  # display inline talks to choose
   def talk_query(update) do
     Logger.info("Inline Query Command /talk")
+
+    query = update.inline_query.query |> String.replace("/talk ", "") |> String.downcase()
+    schedule = State.get("schedule")
+
+    schedule
+      |> Enum.filter(&(String.contains?(Map.get(&1, "title_lower"), query)))
+      |> Enum.map(fn(talk) ->
+        title = Map.get(talk, "title")
+
+        %InlineQueryResult.Article{
+          id: Map.get(talk, "id"),
+          title: title,
+          input_message_content: %{
+            message_text: "/talk #{title}"
+          }
+        }
+      end)
+      |> answer_inline_query()
   end
 
-  # todo: display details about the choosen talk
-  # hint: get talks from State schedule
-  # hint: santize update.message.text from /talk command
-  # hint: reply with send_message *#{title} (#{speaker} | #{time} | #{room})*\n#/{content}
+  # display details about the choosen talk
   def talk(update) do
     Logger.info("Command /talk")
+
+    query = update.message.text |> String.replace("/talk ", "")
+    schedule = State.get("schedule")
+
+    schedule
+      |> Enum.filter(&(Map.get(&1, "title") == query))
+      |> Enum.map_join("\n", &(
+        """
+        *#{Map.get(&1, "title")} (#{Map.get(&1, "speaker")} | #{Map.get(&1, "time")} | #{Map.get(&1, "room")})*
+        #{Map.get(&1, "content")}
+        """
+      ))
+      |> send_message(parse_mode: "Markdown")
   end
 end

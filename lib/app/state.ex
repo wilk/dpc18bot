@@ -17,8 +17,10 @@ defmodule App.State do
       |> Enum.map(fn(el) -> 
         title = Map.get(el, "title")
         %{
+          "id" => Map.get(el, "id"),
           "title_lower" => title |> String.downcase(), 
           "title" => title, 
+          "speaker" => Map.get(el, "speaker"),
           "content" => Map.get(el, "content"),
           "time" => Map.get(el, "time"),
           "room" => Map.get(el, "room")
