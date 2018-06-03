@@ -4,5 +4,6 @@ services:
   app:
     image: elixir:1.6.5-alpine
     working_dir: /opt/app
+    env_file: .env
     volumes:
       - ./:/opt/app
