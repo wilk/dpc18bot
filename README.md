@@ -3,7 +3,7 @@ Dutch PHP Conference 2018 Telegram Bot
 
 ## Tutorial
 
-### Step 1
+### Step 0
 - explore the scaffolder structure
 - configure env vars
 - play with iex
@@ -11,7 +11,7 @@ Dutch PHP Conference 2018 Telegram Bot
 - implement /help command
 - test /help command
 
-### Step 2
+### Step 1
 - implement schedule command
 - implement schedule callback
 - implement talk query
