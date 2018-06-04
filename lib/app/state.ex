@@ -47,6 +47,7 @@ defmodule App.State do
       |> Enum.uniq_by(fn(el) -> Map.get(el, "id") end)
 
     state = %{
+      "talks" => talks,
       "talks_day_1" => talks_day_1,
       "talks_day_2" => talks_day_2,
       "tutorials" => tutorials,
