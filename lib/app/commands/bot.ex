@@ -2,6 +2,7 @@ defmodule App.Commands.Bot do
   use App.Commander
 
   alias App.State
+  alias App.Bookmarks
 
   # display all available commands
   def help(update) do
@@ -160,7 +161,6 @@ defmodule App.Commands.Bot do
   end
 
   # display details of a choosen speaker
-  # hint: display *#{name}\n* #{bio}
   def speaker(update) do
     Logger.info("Command /speaker")
 
@@ -181,26 +181,31 @@ defmodule App.Commands.Bot do
   # todo: display your bookmarks
   # hint: fetch bookmarks from Bookmarks
   # hint: cut'n'paste from speakers/schedule?
-  def bookmark(update) do
+  def bookmarks(update) do
+    Logger.info("Command /bookmarks")
   end
 
   # todo: display inline talks to choose
   # hint: cut'n'paste from speaker_query/talk_query?
   def attend_query(update) do
+    Logger.info("Inline Command Query /attend")
   end
 
   # todo: add the choosen talk to your bookmarks
   # hint: use Bookmarks to add a new talk
   def attend(update) do
+    Logger.info("Command /attend")
   end
 
   # todo: display inline bookmarks to choose
   # hint: cut'n'paste from attend?
   def unattend_query(update) do
+    Logger.info("Inline Command Query /unattend")
   end
 
   # todo: remove the choosen talk from your bookmarks
   # hint: use Bookmarks to remove an existing talk
   def unattend(update) do
+    Logger.info("Command /unattend")
   end
 end
