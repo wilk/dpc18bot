@@ -22,6 +22,7 @@ defmodule App.State do
           "title" => title, 
           "speaker" => Map.get(el, "speaker"),
           "content" => Map.get(el, "content"),
+          "level" => Map.get(el, "level"),
           "time" => Map.get(el, "time"),
           "room" => Map.get(el, "room")
         } 

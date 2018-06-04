@@ -1,28 +1,23 @@
 defmodule App.Bookmarks do
   use Agent
 
-  # todo: define the state
-  # hint: use Agent.start_link fn, name: :atom
-  # hint: use a list of maps %{id, title_lower, title, speaker, room, time, content}
+  # define the state
   def start_link() do
-
+    Agent.start_link(fn() -> [] end, name: :bookmarks)
   end
 
-  # todo: fetch the state
-  # hint: use Agent.get with :atom, fn
+  # fetch the state
   def get() do
-
+    Agent.get(:bookmarks, fn(bookmarks) -> bookmarks end)
   end
 
-  # todo: add a talk to the bookmarks
-  # hint: use Agent.update with :atom, fn
+  # add a talk to the bookmarks
   def add(talk) do
-
+    Agent.update(:bookmarks, fn(bookmarks) -> bookmarks ++ [talk] end)
   end
 
-  # todo: remove a talk from the bookmarks
-  # hint: use Agent.update with :atom, fn
+  # remove a talk from the bookmarks
   def remove(talk) do
-
+    Agent.update(:bookmarks, fn(bookmarks) -> bookmarks -- [talk] end)
   end
 end

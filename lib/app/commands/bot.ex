@@ -2,6 +2,7 @@ defmodule App.Commands.Bot do
   use App.Commander
 
   alias App.State
+  alias App.Bookmarks
 
   # display all available commands
   def help(update) do
@@ -145,8 +146,8 @@ defmodule App.Commands.Bot do
 
     speakers
       |> Enum.filter(&(String.contains?(Map.get(&1, "lower_name"), query)))
-      |> Enum.map(fn(talk) ->
-        name = Map.get(talk, "name")
+      |> Enum.map(fn(speaker) ->
+        name = Map.get(speaker, "name")
 
         %InlineQueryResult.Article{
           id: name,
@@ -160,7 +161,6 @@ defmodule App.Commands.Bot do
   end
 
   # display details of a choosen speaker
-  # hint: display *#{name}\n* #{bio}
   def speaker(update) do
     Logger.info("Command /speaker")
 
@@ -178,29 +178,81 @@ defmodule App.Commands.Bot do
       |> send_message(parse_mode: "Markdown")
   end
 
-  # todo: display your bookmarks
-  # hint: fetch bookmarks from Bookmarks
-  # hint: cut'n'paste from speakers/schedule?
-  def bookmark(update) do
+  # display your bookmarks
+  def bookmarks(update) do
+    Logger.info("Command /bookmarks")
+
+    message = Bookmarks.get()
+      |> Enum.map_join("\n", &("#{Map.get(&1, "title")} (#{Map.get(&1, "speaker")}) | #{Map.get(&1, "room")} | #{Map.get(&1, "level")}"))
+    
+    send_message("*Bookmarks list*\n\n#{message}", parse_mode: "Markdown")
   end
 
-  # todo: display inline talks to choose
-  # hint: cut'n'paste from speaker_query/talk_query?
+  # display inline talks to choose
   def attend_query(update) do
+    Logger.info("Inline Command Query /attend")
+
+    query = update.inline_query.query |> String.replace("/attend ", "") |> String.downcase()
+
+    State.get("schedule")
+      |> Enum.filter(&(String.contains?(Map.get(&1, "title_lower"), query)))
+      |> Enum.map(fn(talk) ->
+        title = Map.get(talk, "title")
+
+        %InlineQueryResult.Article{
+          id: title,
+          title: title,
+          input_message_content: %{
+            message_text: "/attend #{title}"
+          }
+        }
+      end)
+      |> answer_inline_query()
   end
 
-  # todo: add the choosen talk to your bookmarks
-  # hint: use Bookmarks to add a new talk
+  # add the choosen talk to your bookmarks
   def attend(update) do
+    Logger.info("Command /attend")
+
+    query = update.message.text |> String.replace("/attend ", "")
+
+    talk = State.get("schedule") |> Enum.find(&(Map.get(&1, "title") == query))
+    Bookmarks.add(talk)
+
+    send_message("Talk added to bookmarks")
   end
 
-  # todo: display inline bookmarks to choose
-  # hint: cut'n'paste from attend?
+  # display inline bookmarks to choose
   def unattend_query(update) do
+    Logger.info("Inline Command Query /unattend")
+
+    query = update.inline_query.query |> String.replace("/unattend ", "") |> String.downcase()
+
+    Bookmarks.get()
+      |> Enum.filter(&(String.contains?(Map.get(&1, "title_lower"), query)))
+      |> Enum.map(fn(talk) ->
+        title = Map.get(talk, "title")
+
+        %InlineQueryResult.Article{
+          id: title,
+          title: title,
+          input_message_content: %{
+            message_text: "/unattend #{title}"
+          }
+        }
+      end)
+      |> answer_inline_query()
   end
 
-  # todo: remove the choosen talk from your bookmarks
-  # hint: use Bookmarks to remove an existing talk
+  # remove the choosen talk from your bookmarks
   def unattend(update) do
+    Logger.info("Command /unattend")
+
+    query = update.message.text |> String.replace("/unattend ", "")
+
+    talk = Bookmarks.get() |> Enum.find(&(Map.get(&1, "title") == query))
+    Bookmarks.remove(talk)
+
+    send_message("Talk removed from bookmarks")
   end
 end
