@@ -20,6 +20,7 @@ defmodule App.State do
           "id" => Map.get(el, "id"),
           "title_lower" => title |> String.downcase(), 
           "title" => title, 
+          "level" => Map.get(el, "level"),
           "speaker" => Map.get(el, "speaker"),
           "content" => Map.get(el, "content"),
           "time" => Map.get(el, "time"),
