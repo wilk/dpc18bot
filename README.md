@@ -17,7 +17,7 @@ $ mix
 
 ## Tutorial
 
-### Step 0
+### Step 0_scaffolding
 - explore the scaffolder structure
 - configure env vars
 - play with iex
@@ -25,18 +25,18 @@ $ mix
 - implement /help command
 - test /help command
 
-### Step 1
+### Step 1_schedule
 - implement schedule command
 - implement schedule callback
 - implement talk query
 - implement talk command
 
-### Step 2
+### Step 2_speakers
 - implement speakers command
 - implement speakers query
 - implement speaker command
 
-### Step 3
+### Step 3_bookmarks
 - Implement bookmarks store
 - Implement bookmarks command
 - Implement attend query
